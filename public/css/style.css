@@ -1,0 +1,19 @@
+
+@media (min-width: 768px) {
+    .community-margin {
+        margin-left: 12.5%;
+    }
+}
+
+.row {
+    padding: 40px 0px;
+}
+
+.col-md-4 {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px auto;
+    min-height: 300px;
+    box-shadow: 10px 10px 5px #888888;
+    cursor: pointer;
+}

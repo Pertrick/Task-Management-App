@@ -27,18 +27,17 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <a class="nav-link active text-light" aria-current="page"
-                        href="#">{{ auth()->user()->name }}</a>
-                    <!-- Authentication -->
-                    <form method="POST" action="{{ route('logout') }}" class="btn btn-sm btn-light text-light ">
-                        @csrf
+                <a class="nav-link active text-light" aria-current="page" href="#">{{ auth()->user()->name }}</a>
+                <!-- Authentication -->
+                <form method="POST" action="{{ route('logout') }}" class="btn btn-sm btn-light text-light ">
+                    @csrf
 
-                        <x-dropdown-link :href="route('logout')"
-                            onclick="event.preventDefault();
+                    <x-dropdown-link :href="route('logout')"
+                        onclick="event.preventDefault();
                                         this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-dropdown-link>
-                    </form>
+                        {{ __('Log Out') }}
+                    </x-dropdown-link>
+                </form>
             </div>
         </div>
     </nav>
@@ -135,7 +134,8 @@
                                     <div class="col-md-12 mt-2">
                                         <input type="submit" id="save_board_btn" class="btn btn-success float-end "
                                             value="Save" />
-                                        <button type="button" class="btn btn-danger float-start cancel" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-danger float-start cancel"
+                                            data-dismiss="modal">Cancel</button>
                                     </div>
 
                                 </div>
@@ -198,7 +198,8 @@
                                     <div class="col-md-12 mt-2">
                                         <input type="submit" id="save_btn" class="btn btn-success float-end "
                                             value="Save" />
-                                        <button type="button" class="btn btn-danger float-start cancel" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-danger float-start cancel"
+                                            data-dismiss="modal">Cancel</button>
                                     </div>
 
                                 </div>
@@ -247,7 +248,7 @@
                                     <p class="float-end text-dark" style="cursor: pointer"
                                         onclick="removeTask('${ task.id }')"> x </p>
 
-                                    <svg onclick="editTask('${ task.id }', '${ task.name}', '${ task.priority }')"
+                                    <svg onclick="editTask('${ task.id }', '${ task.name}', ${task.priority})"
                                         class="float-end" xmlns="http://www.w3.org/2000/svg" width="16"
                                         height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                         <path
@@ -356,10 +357,10 @@
                     addDroppable();
                     $('#row-id').append(board);
                     $('.priorityClass').append(span);
-                   
+
 
                     console.log(priority);
-                   
+
                     incrementBoardCount();
                     fetchPriority();
 
@@ -423,7 +424,8 @@
             $('#task-id').val(name);
             $('#select-priority').val(priority);
             $('form#add-new-task').append(`<input type="hidden" value="${id}" name="id">`);
-            fetchPriority(priority.id);
+            console.log(priority);
+            fetchPriority(priority);
             $('#add-task').modal('toggle');
 
         }
@@ -477,57 +479,57 @@
 
         addDroppable();
 
-        function addDroppable(){
-            
+        function addDroppable() {
+
             $(function() {
-            $(".draggable").draggable({
-                containment: '#content',
-                cursor: 'move',
-                snap: '#content',
-                revert: "invalid",
-                // containment: $('#row-id'),
-                stop: function(event, ui) {
+                $(".draggable").draggable({
+                    containment: '#content',
+                    cursor: 'move',
+                    snap: '#content',
+                    revert: "invalid",
+                    // containment: $('#row-id'),
+                    stop: function(event, ui) {
 
-                    console.log($(this.draggable)
-                        .find("input")
-                        .val($(ui.draggable).text()));
-                },
+                        console.log($(this.draggable)
+                            .find("input")
+                            .val($(ui.draggable).text()));
+                    },
 
-                drag: function(event, ui) {}
-            });
+                    drag: function(event, ui) {}
+                });
 
-         
-            $(".dropable").droppable({
-                drop: function(event, ui) {
-                    $(ui.draggable).detach().css({
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0
-                    }).appendTo(this);
-                    $(this).addClass("ui-state-highlight");
-                    console.log($(ui.draggable).attr("id"));
-                    const boardId = event.target.id;
-                    console.log("target: " + event.target.id);
 
-                    var draggedId = $(ui.draggable).attr("id");
+                $(".dropable").droppable({
+                    drop: function(event, ui) {
+                        $(ui.draggable).detach().css({
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0
+                        }).appendTo(this);
+                        $(this).addClass("ui-state-highlight");
+                        console.log($(ui.draggable).attr("id"));
+                        const boardId = event.target.id;
+                        console.log("target: " + event.target.id);
 
-                    console.log("board: " + draggedId);
+                        var draggedId = $(ui.draggable).attr("id");
 
-                    $.ajax({
-                        type: "PUT",
-                        url: "tasks/" + draggedId,
-                        data: {
-                            'boardId': boardId ,
-                            'id': draggedId
-                        },
-                        datatype: "json",
-                        success: function(task) {
-                            console.log(task);
+                        console.log("board: " + draggedId);
 
-                            // var priority = JSON.stringify(task.priority);
-                            // console.log(priority);
-                            var span = `
+                        $.ajax({
+                            type: "PUT",
+                            url: "tasks/" + draggedId,
+                            data: {
+                                'boardId': boardId,
+                                'id': draggedId
+                            },
+                            datatype: "json",
+                            success: function(task) {
+                                console.log(task);
+
+                                var priority = JSON.stringify(task.priority);
+                                console.log(priority);
+                                var span = `
                                 <span
                                     class="list-group-item text-light text-center p-1 draggable rounded my-1 me-5"
                                     id="${ task.id }"  style="background-color: ${ task.priority.color }">
@@ -535,7 +537,7 @@
                                     <p class="float-end text-dark" style="cursor: pointer"
                                         onclick="removeTask('${ task.id }')"> x </p>
 
-                                    <svg onclick="editTask('${ task.id }', '${ task.name}', '${ task.priority }')"
+                                    <svg onclick="editTask('${ task.id }','${ task.name}',${task.priority})"
                                         class="float-end" xmlns="http://www.w3.org/2000/svg" width="16"
                                         height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                         <path
@@ -543,28 +545,28 @@
                                     </svg>
 
                                 </span> `;
-                        $(`#${task.priority.board.id}`).append(span);
-                        $(`#${task.id}`).remove();
-                        $(`#${task.id}`).draggable();
+                                $(`#${task.priority.board.id}`).append(span);
+                                $(`#${task.id}`).remove();
+                                $(`#${task.id}`).draggable();
 
-                        console.log(task.priority.board.id);
-                        // $('#high-id').prepend(span);
-                    // $(`#${element.id}`).draggable();
-                        },
-                        error: (data) => {}
-                    });
+                                console.log(task.priority.board.id);
+                                // $('#high-id').prepend(span);
+                                // $(`#${element.id}`).draggable();
+                            },
+                            error: (data) => {}
+                        });
 
 
-                    setTimeout(() => {
-                        $(this).removeClass("ui-state-highlight");
-                    }, 1000);
-                }
+                        setTimeout(() => {
+                            $(this).removeClass("ui-state-highlight");
+                        }, 1000);
+                    }
+                });
+
             });
+        }
 
-        });
-            }
 
-       
 
         function incrementBoardCount() {
             boardCount++;
@@ -582,20 +584,33 @@
             }
         }
 
-        function fetchPriority(priorityId = "" ) {
-            $.get('{{ route('priorities.index') }}', function(data, status) {
-                var options  = (priorityId.length === 0 ) ? `<option value="" selected> -select priority - </option>` : 
-                `<option value=""> -select priority - </option> `;
-                $.each(data, function(key, value) {
-                    console.log(value.id);
-                    console.log(priorityId);
+        function fetchPriority(priority = "") {
 
-                        if(priorityId == value.id){
-                            options += `<option value="${value.id}" selected>${value.name}</option>`;
-                        }else{
-                            options += `<option value="${value.id}">${value.name}</option>`;
-                        }
-                   
+            priority = (isJson(priority)) ? JSON.parse(priority) : priority;
+            // var priority  = JSON.parse(priorityObject);
+            // var priority;
+            // console.log(typeof(priority));
+            // if(priorityObject == 'undefined'){
+            //     priority = ""; 
+            // }else{
+
+            // }
+
+            $.get('{{ route('priorities.index') }}', function(data, status) {
+                // console.log(priorityId);
+                var options = (priority) ?
+                    `<option value="" > -select priority - </option>` :
+                    `<option value="" selected> -select priority - </option> `;
+                $.each(data, function(key, value) {
+                    console.log(priority.id);
+
+
+                    if (priority.id == value.id) {
+                        options += `<option value="${value.id}" selected>${value.name}</option>`;
+                    } else {
+                        options += `<option value="${value.id}">${value.name}</option>`;
+                    }
+
                 })
 
                 console.log(options);
@@ -603,10 +618,20 @@
             });
         }
 
-        $('button.cancel').on('click', function(){
+        $('button.cancel').on('click', function() {
             $('#add-task').modal('hide');
             $('#add-board').modal('hide');
         });
+
+
+        function isJson(str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        }
     </script>
 </body>
 

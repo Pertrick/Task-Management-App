@@ -63,7 +63,7 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         $priorityId = Board::where("id", $request->boardId)->pluck('priority_id')->first();
-        return tap($task)->update(['priority_id' => $priorityId])->load('priority.board');;
+        return tap($task)->update(['priority_id' => $priorityId])->load('priority.board');
     }
 
     /**
